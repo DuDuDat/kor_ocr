@@ -5,6 +5,7 @@ from sqlalchemy import inspect
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import select, and_
 
+ㄴㄴ
 
 engine = create_engine(f'mysql+pymysql://{user_name}:{user_password}@{host_name}:{port}/{db_name}')
 metadata = MetaData()
