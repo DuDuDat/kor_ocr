@@ -1,11 +1,20 @@
-from multiprocessing import Pool
+import json
 import pandas as pd
-from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, ForeignKey
-from sqlalchemy import inspect
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import select, and_
 
-ㄴㄴ
+from multiprocessing import Pool
+
+from sqlalchemy import inspect
+from sqlalchemy.sql import select, and_
+from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, ForeignKey
+
+with open('root_user.json') as f:
+    mysql = json.load(f)
+
+host_name = mysql['host']
+user_name = mysql['user']
+user_password = mysql['password']
+db_name = mysql['database']
+port = mysql['port']
 
 engine = create_engine(f'mysql+pymysql://{user_name}:{user_password}@{host_name}:{port}/{db_name}')
 metadata = MetaData()
@@ -76,11 +85,6 @@ def chunk_insert_coord(df):
 def insert_info(info_df, key=''):
     select_columns = ['IMAGE_ID', 'TEXT', 'CLASS']
 
-    # if 'BOX' in info_df.columns:
-    #     table = coord_info
-    # else:
-    #     table = basic
-
     if 'BOX' in info_df.columns:
         coord_cols = ['COORD_FIRST', 'COORD_SECOND', 'COORD_THIRD', 'COORD_FOURTH']
         select_columns.extend(coord_cols)
@@ -103,22 +107,20 @@ def insert_info(info_df, key=''):
     pool.close()
 
 
-    # info_df.to_sql(name=table, con=engine, if_exists='append', index=False)
-
 """ ---------------------------- SELECT ---------------------------- """
-def select_root(search):
+def select_zip_path_by_root(search):
     query = select(root_table).where(root_table.c.ZIP_PATH.like(f'%{search}%'))
     with engine.connect() as connection:
         results = connection.execute(query)
     return results.fetchall()
 
-def select_image(search):
+def select_image_by_zip_path(search):
     query = select(image_path_table).where(image_path_table.c.ZIP_PATH.like(f'%{search}%'))
     with engine.connect() as connection:
         results = connection.execute(query)
     return results.fetchall()
 
-def select_main_info_by_image_path(zip_path, image_path):
+def select_coord_info_by_image_path(zip_path, image_path):
     query = select(coord_info_table). \
         select_from(image_path_table.join(coord_info_table, image_path_table.c.ID == coord_info_table.c.IMAGE_ID)). \
         where(
