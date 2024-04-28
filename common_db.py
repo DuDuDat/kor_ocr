@@ -137,7 +137,6 @@ class DataSelector: # DB 질의문 사용
         :param path: 경로에 포함되는 단어
         :param _class: '문자', '단어' 중 하나 선택 선택 안하면 전체
         """
-
         path = f'%{path}%'
         path = path.replace('\\', '/')
         if path.startswith(self.root_dir):
@@ -155,6 +154,10 @@ class DataSelector: # DB 질의문 사용
         return self.__fetchall(query, param)
 
     def search_coord_by_type(self, type, _class=None):
+        """
+        :param type: 'book', 'Goods', 'Signboard', 'Traffic_Sign', 'form', 'cursive' 중 하나 고르기
+        :param _class: '문자', '단어' 중 하나 선택 선택 안하면 전체
+        """
         placeholder, param = self.__search_class('T', type, _class)
         query = f"""
             SELECT R.ZIP_PATH, I.IMAGE_PATH, T.*, C.TYPE FROM COORD_IMAGE_INFO AS C
@@ -166,6 +169,11 @@ class DataSelector: # DB 질의문 사용
         return self.__fetchall(query, param)
 
     def search_coord_by_path_and_type(self, path, type, _class=None):
+        """
+        :param path: 경로에 포함되는 단어
+        :param type: 'book', 'Goods', 'Signboard', 'Traffic_Sign', 'form', 'cursive' 중 하나 고르기
+        :param _class: '문자', '단어' 중 하나 선택 선택 안하면 전체
+        """
         path = f'%{path}%'
         path = path.replace('\\', '/')
         if path.startswith(self.root_dir):
