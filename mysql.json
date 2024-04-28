@@ -1,0 +1,7 @@
+{
+  "host": "database-1.cbkqmc0w40pf.ap-northeast-2.rds.amazonaws.com",
+  "port": 3306,
+  "user": "zerobase",
+  "password": "password",
+  "database": "KOR_OCR"
+}
