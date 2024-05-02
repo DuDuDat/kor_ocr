@@ -23,6 +23,7 @@ def get_zip_json(zip_path, paths):
                 result.append(json_file)
     return result
 
+# zip 폴더 안 CSV 데이터 가져오기
 def get_zip_csv(zip_path, extension):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_contents = zip_ref.namelist()
@@ -35,6 +36,11 @@ def get_zip_csv(zip_path, extension):
 """ ---------------------------- 파일 경로 가져오기 ---------------------------- """
 # 일반 폴더 내 파일 경로 찾는 함수
 def find_file_paths(directory, extension, replace=True):
+    """
+    :param directory: 기준이 되는 폴더
+    :param extension: 파일 형식
+    :param replace: 기준이 되는 폴더 삭제가 필요할 경우
+    """
     result = glob.glob(f"{directory}/**/*.{extension}", recursive=True)
     result = [file.replace('\\', '/') for file in result]
     if extension == 'zip' and replace:
@@ -103,6 +109,10 @@ def kor_directory(json_data, select_cols):
     return result[select_cols]
 
 def variables_directory(jsons_list):
+    """
+    :param jsons_list: [{}, {}, {}...]
+    :return:
+    """
     infos = []
     image_infos = []
     for json_info in tqdm(jsons_list):
