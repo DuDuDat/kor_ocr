@@ -2,7 +2,7 @@ import json
 import mysql.connector
 import pandas as pd
 
-with open('root_user.json') as f:
+with open('private/root_user.json') as f:
     config = json.load(f)
 
 
